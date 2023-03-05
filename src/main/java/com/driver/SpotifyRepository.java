@@ -263,15 +263,8 @@ public class SpotifyRepository {
         }
         if(isSongPresent==false)throw new Exception("Song does not exist");
 
-        boolean isAlreadyLiked =false;
 
-        List<User> list = songLikeMap.get(song);
-        for(User u : list){
-            if(u.equals(user)){
-                isAlreadyLiked=true;
-                break;
-            }
-        }
+
         if(songLikeMap.containsKey(song)){//check if song is present in map
             List<User> userlist = songLikeMap.get(song);
             if(userlist.contains(user)){//if it is already liked by the user
@@ -305,7 +298,7 @@ public class SpotifyRepository {
                 return song;
             }
         }
-        else {//song is not prsent in like map yet
+        else {//song is not present in like map yet
             int likes = song.getLikes() + 1;
             song.setLikes(likes);
             List<User> newlist = new ArrayList<>();
@@ -338,27 +331,33 @@ public class SpotifyRepository {
 
     public String mostPopularArtist() {
         int max = 0;
-        String name = null;
-        for(Artist a : artists){
+        Artist artist=null;
+
+        for(Artist a:artists){
             if(a.getLikes()>=max){
-                max= a.getLikes();
-                name = a.getName();
+                artist=a;
+                max = a.getLikes();
             }
         }
-
-        return name;
+        if(artist==null)
+            return null;
+        else
+            return artist.getName();
     }
 
     public String mostPopularSong() {
-        int max = 0;
-        String name =null;
-        for(Song s : songs){
-            if(s.getLikes()>max){
-                max= s.getLikes();
-                name = s.getTitle();
+        int max=0;
+        Song song = null;
+
+        for(Song s: songLikeMap.keySet()){
+            if(s.getLikes()>=max){
+                song=s;
+                max = s.getLikes();
             }
         }
-
-        return name;
+        if(song==null)
+            return null;
+        else
+            return song.getTitle();
     }
 }
